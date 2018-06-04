@@ -5,10 +5,10 @@ library(lubridate)
 library(MLmetrics)
 
 # Read in the world cup CSV data
-rawdata = read_csv("wc_datathon_dataset.csv")
+rawdata = read_csv("00_data/wc_datathon_dataset.csv")
 
 # Convert the match date to an R date
-rawdata$date = dmy(rawdata$date)
+rawdata$date = as.Date(rawdata$date)
 
 # We're going to use all matches (qualifiers / friendlies etc) AFTER the 2010 world cup to predict the 2014 world cup matches
 training = rawdata %>%

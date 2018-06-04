@@ -9,15 +9,16 @@ library(elo)
 library(lubridate)
 
 # Read in the world cup CSV data
-training = read_csv("wc_datathon_dataset.csv")
-training$date = dmy(training$date)
+training = read_csv("00_data/wc_datathon_dataset.csv")
+rawdata$date = as.Date(rawdata$date)
+
 
 # Lowercase team names
 training$team_1 = tolower(training$team_1)
 training$team_2 = tolower(training$team_2)
 
 # Read in submission file
-wc_2018 = read_csv("john_smith_numbersman1.csv")
+wc_2018 = read_csv("00_data/john_smith_numbersman1-1.csv")
 
 # Fix the ELO k factor - here you can try different values to see if improves the model performance
 k_fac = 20
@@ -31,9 +32,9 @@ elo_run = elo.run(
 
 # Draw Rates
 draw_rates = data.frame(win_prob = elo_run$elos[,3],win_loss_draw = elo_run$elos[,4]) %>%
-  mutate(prob_bucket = abs(round((win_prob-(1-win_prob))*20)) / 20) %>%
-  group_by(prob_bucket) %>%
-  summarise(draw_prob = sum(ifelse(win_loss_draw==0.5, 1, 0)) / n())
+                mutate(prob_bucket = abs(round((win_prob-(1-win_prob))*20)) / 20) %>%
+                group_by(prob_bucket) %>%
+                summarise(draw_prob = sum(ifelse(win_loss_draw==0.5, 1, 0)) / n())
 
 # Run predictions on 2018 world cup: the predict function, in this case, just needs the home and away team names for the tournament
 wc_2018_home_probabilities = predict(elo_run, newdata = wc_2018 %>% select(team_1, team_2))
