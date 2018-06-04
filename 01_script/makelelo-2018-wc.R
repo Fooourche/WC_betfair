@@ -7,6 +7,9 @@ library(readr)
 library(dplyr)
 library(elo)
 library(lubridate)
+library(tidyverse)
+library(h2o)
+library(timetk)
 
 # Read in the world cup CSV data
 training = read_csv("00_data/wc_datathon_dataset.csv")
@@ -29,6 +32,9 @@ elo_run = elo.run(
   data = training,
   k = k_fac
 )
+
+
+training <- cbind(training,elo_run)
 
 # Draw Rates
 draw_rates = data.frame(win_prob = elo_run$elos[,3],win_loss_draw = elo_run$elos[,4]) %>%
